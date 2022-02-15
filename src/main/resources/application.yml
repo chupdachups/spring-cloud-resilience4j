@@ -1,0 +1,58 @@
+server:
+  port: 7979
+  
+spring:
+  application:
+    name: resilience4j
+    
+resilience4j:
+  circuitbreaker:
+    configs:
+      default:
+        register-health-indicator: true
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        wait-duration-in-open-state: 10s
+    instances:
+      testConfig:
+        base-config: default
+        
+  bulkhead:
+    instances:
+      testConfig:
+        max-concurrent-calls: 25
+        max-wait-duration: 0
+        
+  ratelimiter:
+    instances:
+      testConfig:
+        limit-for-period: 50
+        limit-refresh-period: 500ms
+        timeout-duration: 5s
+        register-health-indicator: true
+        
+  retry:
+    instances:
+      testConfig:
+        max-attempts: 3
+        wait-duration: 500ms
+        
+  timelimiter:
+    instances:
+      testConfig:
+        timeout-duration: 1s
+        
+        
+management:
+  endpoints:
+    web:
+      exposure:
+        include:
+        - "*"
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+  
